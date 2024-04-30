@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'routing/app_router.dart';
 import 'routing/routes.dart';
@@ -10,16 +11,18 @@ import 'routing/routes.dart';
 // import the configuration file you generated using Firebase CLI
 import 'firebase_options.dart';
 
-List<CameraDescription>? cameras; 
+List<CameraDescription>? cameras;
 
 late String initialRoute;
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-Future <void> main() async {
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   FirebaseAuth.instance.authStateChanges().listen(
     (user) {
       if (user == null || !user.emailVerified) {
@@ -42,6 +45,17 @@ Future <void> main() async {
     ],
     debug: true,
   );
+
+  // Initialize the plugin
+  final initializationSettingsAndroid =
+      AndroidInitializationSettings('app_icon');
+  final initializationSettingsIOS = IOSInitializationSettings();
+  final initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsIOS,
+  );
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   runApp(MyApp(router: AppRouter()));
 }
 

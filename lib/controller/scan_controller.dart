@@ -6,7 +6,9 @@ import 'package:camera/camera.dart';
 //import 'package:firebase_core/firebase_core.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_vision/flutter_vision.dart';
+import 'package:bachelor_application/main.dart';
 
 late List<CameraDescription> cameras;
 
@@ -52,12 +54,11 @@ class _YoloVideoState extends State<YoloVideo> {
   CameraImage? cameraImage;
   bool isLoaded = false;
   bool isDetecting = false;
-  
 
   @override
   void initState() {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed){
+      if (!isAllowed) {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
@@ -161,21 +162,37 @@ class _YoloVideoState extends State<YoloVideo> {
 
   triggerNotification() {
     AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: 01,
-        channelKey: 'basic_channel',
-        title: 'BE CAREFUL !!',
-        body: 'A person is infront of you.',
-        notificationLayout: NotificationLayout.BigText,
-      )
+        content: NotificationContent(
+      id: 01,
+      channelKey: 'basic_channel',
+      title: 'BE CAREFUL !!',
+      body: 'A person is infront of you.',
+      notificationLayout: NotificationLayout.BigText,
+    ));
+  }
+
+  Future<void> _showNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '01', // id
+      'BE CAREFUL !!', // title
+      channelDescription: 'A person is infront of you.', // description
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    
+    await flutterLocalNotificationsPlugin.show(
+      0, // notification id
+      'BE CAREFUL !!', // title
+      'A person is in front of you.', // body
+      platformChannelSpecifics,
+      payload: 'item x',
     );
   }
 
-  
-
-
   List<Widget> displayBoxesAroundRecognizedObjects(Size screen) {
-    
     if (yoloResults.isEmpty) return [];
     double factorX = screen.width / (cameraImage?.height ?? 1);
     double factorY = screen.height / (cameraImage?.width ?? 1);
@@ -183,8 +200,8 @@ class _YoloVideoState extends State<YoloVideo> {
     Color colorPick = const Color.fromARGB(255, 50, 233, 30);
 
     return yoloResults.map((result) {
-      if(result["tag"] == "person"){
-        triggerNotification();
+      if (result["tag"] == "person") {
+        _showNotification();
       }
       return Positioned(
         left: result["box"][0] * factorX,
