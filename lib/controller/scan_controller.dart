@@ -82,9 +82,11 @@ class _YoloVideoState extends State<YoloVideo> {
 
   @override
   void dispose() async {
+    isDetecting = false;
+    yoloResults.clear();
+    print(yoloResults.length);
     super.dispose();
-    controller.dispose();
-    stopDetection();
+    await controller.dispose();
   }
 
   @override
