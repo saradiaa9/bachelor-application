@@ -3,10 +3,13 @@ import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'routing/app_router.dart';
 import 'routing/routes.dart';
+import 'dart:io';
 
 // import the configuration file you generated using Firebase CLI
 import 'firebase_options.dart';
@@ -58,6 +61,7 @@ Future<void> main() async {
 
   runApp(MyApp(router: AppRouter()));
 }
+
 
 class MyApp extends StatelessWidget {
   final AppRouter router;

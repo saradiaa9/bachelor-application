@@ -2,6 +2,7 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bachelor_application/navigation_bar%20copy.dart';
+import 'package:bachelor_application/theming/colors.dart';
 import 'package:camera/camera.dart';
 //import 'package:firebase_core/firebase_core.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_vision/flutter_vision.dart';
 import 'package:bachelor_application/main.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'dart:io';
 
 late List<CameraDescription> cameras;
 
@@ -54,6 +58,7 @@ class _YoloVideoState extends State<YoloVideo> {
   CameraImage? cameraImage;
   bool isLoaded = false;
   bool isDetecting = false;
+  late XFile? videoFile;
 
   @override
   void initState() {
@@ -90,6 +95,49 @@ class _YoloVideoState extends State<YoloVideo> {
     await controller.dispose();
   }
 
+  Future<void> startRecording() async {
+  if (!controller.value.isRecordingVideo) {
+    try {
+      await controller.startVideoRecording();
+      setState(() {});
+    } catch (e) {
+      print('Error starting video recording: $e');
+    }
+  }
+}
+
+
+  Future<void> stopRecording() async {
+    if (controller.value.isRecordingVideo) {
+      XFile? file = await controller.stopVideoRecording();
+      setState(() {
+        videoFile = file;
+      });
+    }
+  }
+
+  Future<void> sendEmailWithVideo() async {
+    if (videoFile == null) {
+      print('Video file not found');
+      return;
+    }
+    
+    final Email email = Email(
+      body: 'Please find the recorded video attached.',
+      subject: 'Recorded Video',
+      recipients: ['dataset.eg.2024@gmail.com'],
+      attachmentPaths: [videoFile!.path],
+    );
+
+    try {
+      await FlutterEmailSender.send(email);
+      print('Email sent successfully');
+    } catch (error) {
+      print('Failed to send email: $error');
+    }
+  }
+  
+
   @override
   Widget build(BuildContext context) {
     if (!isLoaded) {
@@ -104,10 +152,33 @@ class _YoloVideoState extends State<YoloVideo> {
         CameraPreview(
           controller,
         ),
+        Positioned(
+            bottom: 100,
+            left: 180,
+            child: FloatingActionButton(
+              onPressed: () async {
+                if (controller.value.isRecordingVideo) {
+                  await stopRecording();
+                  await sendEmailWithVideo();
+                } else {
+                  await startRecording();
+                }
+              },
+              child: Icon(
+                controller.value.isRecordingVideo
+                    ? Icons.stop
+                    : Icons.fiber_manual_record,
+                color: controller.value.isRecordingVideo
+                    ? Colors.red
+                    : ColorsManager.mainBlue,
+              ),
+            ),
+          ),
         ...displayBoxesAroundRecognizedObjects(MediaQuery.of(context).size),
         Nav2(),
       ],
-    ));
+    ), 
+    );
   }
 
   Future<void> loadYoloModel() async {
