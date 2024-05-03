@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_vision/flutter_vision.dart';
 import 'package:bachelor_application/main.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'dart:io';
+//import 'dart:io';
 
 late List<CameraDescription> cameras;
 
