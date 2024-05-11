@@ -66,4 +66,9 @@ class TextStyles {
     fontWeight: FontWeight.w400,
     color: ColorsManager.mediumLightShadeOfGray,
   );
+
+  static TextStyle bntText = const TextStyle(
+  color: ColorsManager.lightShadeOfGray,
+  fontWeight: FontWeight.w500,
+  );
 }

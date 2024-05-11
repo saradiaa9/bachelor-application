@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: const Center(
               child: CircularProgressIndicator(
-                color: Color(0xFF5C71CF),
+                color: ColorsManager.mainBlue,
               ),
             ),
           ),
@@ -127,9 +127,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
                 child:
                 AppTextButton(
-                  buttonText: 'Forgot Password',
+                  buttonText: 'Change Password',
                   textStyle: TextStyles.font16White600Weight,
-                  backgroundColor: Color(0xFF5C71CF),
+                  backgroundColor: ColorsManager.mainBlue,
                   onPressed: () async {
                     try {
                       context.pushNamed(Routes.forgetScreen);
@@ -151,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
               AppTextButton(
                   buttonText: 'Sign Out',
                   textStyle: TextStyles.font16White600Weight,
-                  backgroundColor: Color(0xFF5C71CF),
+                  backgroundColor: ColorsManager.mainBlue,
                   onPressed: () async {
                     try {
                       FirebaseAuth.instance.signOut();

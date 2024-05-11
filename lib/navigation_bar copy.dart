@@ -4,8 +4,8 @@
 import 'package:bachelor_application/controller/scan_controller.dart';
 import 'package:flutter/material.dart';
 
-import 'constants/color.dart';
-import 'constants/text_style.dart';
+import 'theming/colors.dart';
+import 'theming/styles.dart';
 import 'data/model.dart';
 
 //import 'screens/camera/camera_view.dart';
@@ -34,7 +34,7 @@ class _Nav2 extends State<Nav2> {
       height: 70.0,
       duration: const Duration(milliseconds: 400),
       decoration: BoxDecoration(
-        color: white,
+        color: ColorsManager.mainBlue,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(0.0),
           topRight: Radius.circular(0.0),
@@ -94,7 +94,7 @@ class _Nav2 extends State<Nav2> {
             alignment: Alignment.center,
             child: Image.asset(
               navBtn[i].imagePath,
-              color: isActive ? selectColor : black,
+              color: ColorsManager.lightShadeOfGray ,
               scale: 2,
             ),
           ),
@@ -102,7 +102,7 @@ class _Nav2 extends State<Nav2> {
             alignment: Alignment.bottomCenter,
             child: Text(
               navBtn[i].name,
-              style: isActive ? bntText.copyWith(color: selectColor) : bntText,
+              style: TextStyles.bntText.copyWith(color: ColorsManager.lightShadeOfGray),
             ),
           )
         ],
